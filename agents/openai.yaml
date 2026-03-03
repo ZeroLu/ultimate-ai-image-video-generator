@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ultimate AI Image & Video Generator"
+  short_description: "Create and poll CyberBara image/video generation tasks"
+  default_prompt: "Use $ultimate-ai-image-video-generator to create a CyberBara generation task and return final media URLs."
