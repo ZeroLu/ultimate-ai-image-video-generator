@@ -3,14 +3,113 @@
 from __future__ import annotations
 
 import argparse
+from typing import Any
 
 from cyberbara_cli.config import resolve_api_key
-from cyberbara_cli.constants import DEFAULT_BASE_URL
+from cyberbara_cli.constants import DEFAULT_BASE_URL, DEFAULT_OUTPUT_DIR
 from cyberbara_cli.gateways import CyberbaraClient
 from cyberbara_cli.output import print_payload
 from cyberbara_cli.payloads import add_json_input_flags, load_json_payload
 from cyberbara_cli.usecases.generation import generate_media_with_credit_guard
-from cyberbara_cli.usecases.wait_task import wait_for_task
+from cyberbara_cli.usecases.media_output import persist_and_open_task_output
+from cyberbara_cli.usecases.wait_task import wait_for_task, wait_for_task_payload
+
+
+def _extract_task_id(payload: Any) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    data = payload.get("data")
+    if not isinstance(data, dict):
+        return None
+    task_id = data.get("task_id")
+    if isinstance(task_id, str) and task_id.strip():
+        return task_id.strip()
+    return None
+
+
+def _collect_submitted_tasks(submit_payload: Any) -> list[dict[str, Any]]:
+    single_task_id = _extract_task_id(submit_payload)
+    if single_task_id:
+        return [{"index": 1, "task_id": single_task_id, "estimated_credits": None}]
+
+    if not isinstance(submit_payload, dict):
+        return []
+    data = submit_payload.get("data")
+    if not isinstance(data, dict):
+        return []
+    items = data.get("items")
+    if not isinstance(items, list):
+        return []
+
+    tasks: list[dict[str, Any]] = []
+    for index, item in enumerate(items, start=1):
+        if not isinstance(item, dict):
+            continue
+        generation_response = item.get("generation_response")
+        task_id = _extract_task_id(generation_response)
+        if not task_id:
+            continue
+        tasks.append(
+            {
+                "index": index,
+                "task_id": task_id,
+                "estimated_credits": item.get("estimated_credits"),
+            }
+        )
+    return tasks
+
+
+def _finalize_submitted_tasks(
+    *,
+    client: CyberbaraClient,
+    submit_payload: Any,
+    interval: float,
+    wait_timeout: int,
+    timeout_per_request: int,
+    save_outputs: bool,
+    open_outputs: bool,
+    output_dir: str,
+) -> Any:
+    tasks = _collect_submitted_tasks(submit_payload)
+    if not tasks:
+        return submit_payload
+
+    final_items: list[dict[str, Any]] = []
+    for task_meta in tasks:
+        task_payload = wait_for_task_payload(
+            client=client,
+            task_id=task_meta["task_id"],
+            interval=interval,
+            timeout=wait_timeout,
+            timeout_per_request=timeout_per_request,
+        )
+        saved_files: list[str] = []
+        if save_outputs:
+            saved_files = persist_and_open_task_output(
+                task_payload=task_payload,
+                output_dir=output_dir,
+                open_files=open_outputs,
+            )
+
+        final_items.append(
+            {
+                "index": task_meta["index"],
+                "task_id": task_meta["task_id"],
+                "estimated_credits": task_meta.get("estimated_credits"),
+                "saved_files": saved_files,
+                "task_payload": task_payload,
+            }
+        )
+
+    if len(final_items) == 1:
+        return final_items[0]["task_payload"]
+
+    return {
+        "data": {
+            "count": len(final_items),
+            "items": final_items,
+        }
+    }
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -71,6 +170,45 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Skip interactive prompt after quote. Use only after explicit user approval.",
     )
+    image_cmd.add_argument(
+        "--async",
+        dest="async_mode",
+        action="store_true",
+        help="Submit task(s) only and return immediately without waiting for outputs.",
+    )
+    image_cmd.add_argument(
+        "--interval",
+        type=float,
+        default=5.0,
+        help="Polling interval in seconds for waiting final output (default: 5).",
+    )
+    image_cmd.add_argument(
+        "--wait-timeout",
+        type=int,
+        default=900,
+        help="Max seconds to wait for task completion after submit (default: 900).",
+    )
+    image_cmd.add_argument(
+        "--timeout-per-request",
+        type=int,
+        default=120,
+        help="HTTP timeout per polling request in seconds (default: 120).",
+    )
+    image_cmd.add_argument(
+        "--output-dir",
+        default=DEFAULT_OUTPUT_DIR,
+        help=f"Directory to save generated media files (default: {DEFAULT_OUTPUT_DIR}).",
+    )
+    image_cmd.add_argument(
+        "--no-save",
+        action="store_true",
+        help="Do not save generated media files locally.",
+    )
+    image_cmd.add_argument(
+        "--no-open",
+        action="store_true",
+        help="Save generated media files but do not auto-open them.",
+    )
 
     video_cmd = subparsers.add_parser(
         "generate-video",
@@ -81,6 +219,45 @@ def build_parser() -> argparse.ArgumentParser:
         "--yes",
         action="store_true",
         help="Skip interactive prompt after quote. Use only after explicit user approval.",
+    )
+    video_cmd.add_argument(
+        "--async",
+        dest="async_mode",
+        action="store_true",
+        help="Submit task(s) only and return immediately without waiting for outputs.",
+    )
+    video_cmd.add_argument(
+        "--interval",
+        type=float,
+        default=5.0,
+        help="Polling interval in seconds for waiting final output (default: 5).",
+    )
+    video_cmd.add_argument(
+        "--wait-timeout",
+        type=int,
+        default=900,
+        help="Max seconds to wait for task completion after submit (default: 900).",
+    )
+    video_cmd.add_argument(
+        "--timeout-per-request",
+        type=int,
+        default=120,
+        help="HTTP timeout per polling request in seconds (default: 120).",
+    )
+    video_cmd.add_argument(
+        "--output-dir",
+        default=DEFAULT_OUTPUT_DIR,
+        help=f"Directory to save generated media files (default: {DEFAULT_OUTPUT_DIR}).",
+    )
+    video_cmd.add_argument(
+        "--no-save",
+        action="store_true",
+        help="Do not save generated media files locally.",
+    )
+    video_cmd.add_argument(
+        "--no-open",
+        action="store_true",
+        help="Save generated media files but do not auto-open them.",
     )
 
     upload_cmd = subparsers.add_parser("upload-images", help="Upload reference image files.")
@@ -111,6 +288,21 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=120,
         help="HTTP timeout per polling request in seconds (default: 120).",
+    )
+    wait_cmd.add_argument(
+        "--output-dir",
+        default=DEFAULT_OUTPUT_DIR,
+        help=f"Directory to save generated media files (default: {DEFAULT_OUTPUT_DIR}).",
+    )
+    wait_cmd.add_argument(
+        "--no-save",
+        action="store_true",
+        help="Do not save generated media files locally.",
+    )
+    wait_cmd.add_argument(
+        "--no-open",
+        action="store_true",
+        help="Save generated media files but do not auto-open them.",
     )
 
     raw_cmd = subparsers.add_parser("raw", help="Call any endpoint directly.")
@@ -158,24 +350,50 @@ def main() -> None:
 
     if args.command == "generate-image":
         request_payload = load_json_payload(args.json, args.file)
-        payload = generate_media_with_credit_guard(
+        submit_payload = generate_media_with_credit_guard(
             client=client,
             media_label="image",
             payload_body=request_payload,
             yes=args.yes,
             timeout=args.timeout,
         )
+        if args.async_mode:
+            print_payload(submit_payload, args.compact)
+            return
+        payload = _finalize_submitted_tasks(
+            client=client,
+            submit_payload=submit_payload,
+            interval=args.interval,
+            wait_timeout=args.wait_timeout,
+            timeout_per_request=args.timeout_per_request,
+            save_outputs=not args.no_save,
+            open_outputs=not args.no_open,
+            output_dir=args.output_dir,
+        )
         print_payload(payload, args.compact)
         return
 
     if args.command == "generate-video":
         request_payload = load_json_payload(args.json, args.file)
-        payload = generate_media_with_credit_guard(
+        submit_payload = generate_media_with_credit_guard(
             client=client,
             media_label="video",
             payload_body=request_payload,
             yes=args.yes,
             timeout=args.timeout,
+        )
+        if args.async_mode:
+            print_payload(submit_payload, args.compact)
+            return
+        payload = _finalize_submitted_tasks(
+            client=client,
+            submit_payload=submit_payload,
+            interval=args.interval,
+            wait_timeout=args.wait_timeout,
+            timeout_per_request=args.timeout_per_request,
+            save_outputs=not args.no_save,
+            open_outputs=not args.no_open,
+            output_dir=args.output_dir,
         )
         print_payload(payload, args.compact)
         return
@@ -198,6 +416,9 @@ def main() -> None:
             timeout=args.timeout,
             timeout_per_request=args.timeout_per_request,
             compact=args.compact,
+            auto_save=not args.no_save,
+            open_files=not args.no_open,
+            output_dir=args.output_dir,
         )
         return
 

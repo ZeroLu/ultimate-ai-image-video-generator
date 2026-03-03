@@ -63,8 +63,8 @@ Future runs reuse this cached key, so users do not need to provide it every time
 1. Discover available models.
 2. Upload reference images when task scene needs image inputs.
 3. Quote credits before creating a generation task.
-4. Create image or video generation task.
-5. Poll task until final status.
+4. Create image or video generation task and wait for final output.
+5. Automatically save generated media locally and open it.
 6. Check usage records when needed.
 
 Reference commands:
@@ -84,7 +84,7 @@ python3 scripts/cyberbara_api.py quote --json '{
   "options":{"duration":"10"}
 }'
 
-# 4) Create a video task
+# 4) Create a video task (default behavior: wait for success, save outputs to ./media_outputs, auto-open)
 python3 scripts/cyberbara_api.py generate-video --json '{
   "model":"sora-2",
   "prompt":"A calm drone shot over snowy mountains at sunrise",
@@ -92,7 +92,7 @@ python3 scripts/cyberbara_api.py generate-video --json '{
   "options":{"duration":"10","resolution":"standard"}
 }'
 
-# 5) Wait until task completes
+# 5) Existing task: wait + save/open outputs
 python3 scripts/cyberbara_api.py wait --task-id <TASK_ID> --interval 5 --timeout 900
 ```
 
@@ -142,6 +142,19 @@ python3 scripts/cyberbara_api.py generate-video --json '{
 }' --yes
 ```
 
+Control auto-save and open behavior:
+
+```bash
+# keep waiting but do not auto-open media
+python3 scripts/cyberbara_api.py generate-image --file ./image-requests.json --yes --no-open
+
+# custom output directory
+python3 scripts/cyberbara_api.py generate-video --json '{...}' --yes --output-dir ./downloads
+
+# submit only (no wait/save/open)
+python3 scripts/cyberbara_api.py generate-video --json '{...}' --yes --async
+```
+
 ## Use Script Capabilities
 
 `scripts/cyberbara_api.py` supports:
@@ -149,10 +162,10 @@ python3 scripts/cyberbara_api.py generate-video --json '{
 - `models` to list public models (`--media-type image|video` optional)
 - `upload-images` to upload local image files to `/api/v1/uploads/images`
 - `quote` to estimate credit cost from JSON request body
-- `generate-image` to auto-quote credits, compute total for batch requests, require formal confirmation, then create image generation task(s)
-- `generate-video` to auto-quote credits, compute total for batch requests, require formal confirmation, then create video generation task(s)
+- `generate-image` to auto-quote credits, compute total for batch requests, require formal confirmation, create task(s), wait, then save/open outputs
+- `generate-video` to auto-quote credits, compute total for batch requests, require formal confirmation, create task(s), wait, then save/open outputs
 - `task` to fetch task snapshot by task ID
-- `wait` to poll task until `success`, `failed`, or `canceled`
+- `wait` to poll task until `success`, `failed`, or `canceled`, then save/open outputs
 - `balance` and `usage` to inspect credits
 - `raw` for direct custom endpoint calls
 
@@ -168,6 +181,7 @@ Use `--file request.json` instead of `--json` for long payloads.
 - Poll `/api/v1/tasks/{taskId}` until final status; only `success` guarantees output URLs.
 - Before every image or video generation submission, obtain quote first and get explicit user confirmation.
 - For multiple image/video requests, calculate and present total estimated credits before submission.
+- Save output files under `media_outputs/` by default and auto-open them unless disabled.
 
 ## Navigate Detailed Model Options
 

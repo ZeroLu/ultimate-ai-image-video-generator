@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 from urllib import error, parse, request
 
-from cyberbara_cli.constants import DEFAULT_BASE_URL
+from cyberbara_cli.constants import DEFAULT_BASE_URL, DEFAULT_HTTP_USER_AGENT
 from cyberbara_cli.output import print_error_and_exit
 
 
@@ -55,11 +55,7 @@ class CyberbaraClient:
             "Accept": "application/json",
             "Authorization": f"Bearer {self.api_key}",
             "x-api-key": self.api_key,
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/123.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": DEFAULT_HTTP_USER_AGENT,
         }
 
         if json_body is not None:
