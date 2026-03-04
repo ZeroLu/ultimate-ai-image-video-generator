@@ -108,3 +108,17 @@ Return estimated_credits and can_afford.
 - [AI SEO Article Workflow](./workflows/ai-seo-article-skill.md)
 - [AI Comic Drama Workflow](./workflows/ai-comic-drama-skill.md)
 - [Curated Prompt Library](./workflows/curated-prompts.md)
+
+---
+
+## 欢迎贡献
+
+欢迎提交 Issue 和 Pull Request，一起完善提示词库、工作流模板、文档和多平台适配能力，让这个项目越来越好。
+
+如果这个项目对你有帮助，也欢迎点一个 Star 支持。
+
+---
+
+## 许可证
+
+本项目采用 MIT 协议，详见 [LICENSE](./LICENSE)。

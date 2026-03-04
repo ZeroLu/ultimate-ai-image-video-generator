@@ -172,6 +172,14 @@ This repository is optimized for:
 
 ---
 
+## Contributing
+
+Contributions are welcome. Please open an issue for bugs/feature ideas, and submit pull requests to improve prompts, workflows, docs, or platform integrations.
+
+If this project helps you, please star the repository and help make it better together.
+
+---
+
 ## License
 
-Open-source repository. Add your preferred license file (`MIT`, `Apache-2.0`, etc.) if you want explicit reuse terms.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE).
