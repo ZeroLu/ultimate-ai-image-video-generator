@@ -7,7 +7,7 @@
 
 ![Ultimate AI Media Generator Skill Cover](./assets/readme-cover-2k-16x9.jpg)
 
-一个开源的 **ai image generator skill**、**ai video generator skill** 与 **ai audio generator skill**，为 AI Agent 提供一站式图像、视频、音效与音乐生成能力。支持 Nano Banana 2、Sora 2、Seedance、Kling、HappyHorse、Suno 等模型，适合内容生产、创意设计与自动化工作流。
+一个开源的 **ai image generator skill**、**ai video generator skill** 与 **ai audio generator skill**，为 AI Agent 提供一站式图像、视频、音效与音乐生成能力。支持 Nano Banana 2、Nano Banana 2 Lite、Sora 2、Seedance、Kling、HappyHorse、Suno 等模型，适合内容生产、创意设计与自动化工作流。
 
 [快速开始](#快速开始) | [核心特性](#核心特性) | [支持平台](#支持平台) | [平台调用示例](#platform-prompts) | [典型场景](#典型场景) | [English README](./README.md)
 
@@ -176,6 +176,7 @@ CyberBara 当前支持的图像、视频、音频与音乐模型：
 | Audio | `suno-sound-v5` | `text-to-audio` |
 | Audio | `suno-sound-v5-5` | `text-to-audio` |
 | Image | `nano-banana-2` | `text-to-image`, `image-to-image` |
+| Image | `nano-banana-2-lite` | `text-to-image`, `image-to-image` |
 | Image | `nano-banana-pro` | `text-to-image`, `image-to-image` |
 | Image | `gpt-image-2` | `text-to-image`, `image-to-image` |
 | Image | `midjourney-v7` | `text-to-image`, `image-to-image` |

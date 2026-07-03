@@ -8,7 +8,7 @@
 
 ![Ultimate AI Media Generator Skill Cover](./assets/readme-cover-2k-16x9.jpg)
 
-An open-source **ai image generator skill**, **ai video generator skill**, and **ai audio generator skill** for AI agents. Empower your agent to generate images, videos, sound effects, and music on their own. Top models like Nano Banana 2, Sora 2, Seedance, Kling, HappyHorse, and Suno are supported.
+An open-source **ai image generator skill**, **ai video generator skill**, and **ai audio generator skill** for AI agents. Empower your agent to generate images, videos, sound effects, and music on their own. Top models like Nano Banana 2, Nano Banana 2 Lite, Sora 2, Seedance, Kling, HappyHorse, and Suno are supported.
 
 [Quick Start](#quick-start) | [Key Features](#key-features) | [Supported Platforms](#supported-platforms) | [Platform Prompts](#step-3-use-the-skill-on-codex-claude-code-openclaw-claude-cowork-cursor-and-antigravity) | [Use Cases](#typical-use-cases) | [Chinese README](./README-zh.md)
 
@@ -176,6 +176,7 @@ CyberBara supported image, video, audio, and music models:
 | Audio | `suno-sound-v5` | `text-to-audio` |
 | Audio | `suno-sound-v5-5` | `text-to-audio` |
 | Image | `nano-banana-2` | `text-to-image`, `image-to-image` |
+| Image | `nano-banana-2-lite` | `text-to-image`, `image-to-image` |
 | Image | `nano-banana-pro` | `text-to-image`, `image-to-image` |
 | Image | `gpt-image-2` | `text-to-image`, `image-to-image` |
 | Image | `midjourney-v7` | `text-to-image`, `image-to-image` |

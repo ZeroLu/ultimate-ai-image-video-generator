@@ -634,6 +634,22 @@ Validation level: strict keys + light normalization.
 | `options.output_format` | `string`   | No                            | normalized: `jpg` / `png`      | `jpeg` becomes `jpg`; other strings are passed through                        |
 | `options.google_search` | `boolean`  | No                            | default unset                  | Only supported by `nano-banana-2`                                             |
 
+#### `nano-banana-2-lite`
+
+Supported scenes: `text-to-image`, `image-to-image`.
+Validation level: strict keys + light normalization.
+
+Credits: `3` credits per image.
+
+| Field                  | Type       | Required                      | Allowed / Default    | Notes                                                                |
+| ---------------------- | ---------- | ----------------------------- | -------------------- | -------------------------------------------------------------------- |
+| `prompt`               | `string`   | Yes                           | non-empty            | Required for both scenes                                             |
+| `options.image_input`  | `string[]` | Required for `image-to-image` | URL array            | Sent upstream as `image_urls`                                        |
+| `options.aspect_ratio` | `string`   | No                            | any non-empty string | Passed through as-is                                                 |
+| `options.resolution`   | `string`   | No                            | ignored              | CyberBara does not send `resolution` for `nano-banana-2-lite`        |
+| `options.output_format`| `string`   | No                            | ignored              | CyberBara does not send `output_format` for `nano-banana-2-lite`     |
+| `options.google_search`| `boolean`  | No                            | ignored              | `google_search` is not supported by `nano-banana-2-lite`             |
+
 #### `nano-banana-pro`
 
 Supported scenes: `text-to-image`, `image-to-image`.
