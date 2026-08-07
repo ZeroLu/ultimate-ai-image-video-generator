@@ -110,9 +110,14 @@ Response example:
         "model": "kling-3.0-motion-control",
         "media_type": "video",
         "supported_scenes": ["video-to-video"]
+      },
+      {
+        "model": "seedance-2.5",
+        "media_type": "video",
+        "supported_scenes": ["text-to-video", "image-to-video", "video-to-video"]
       }
     ],
-    "total": 4
+    "total": 5
   }
 }
 ```
@@ -458,6 +463,16 @@ Request body:
 - `prompt` optional for `sora-2-pro` at API validation layer, but still recommended
 - `scene` optional (`text-to-video` / `image-to-video` / `video-to-video`)
 - `options` optional
+
+For `minimax-h3`, `image-to-video` defaults to reference-to-video mode. Set
+`options.minimax_h3_mode` to `first_last_frames` to use the first and last
+uploaded images instead. Reference mode uses `reference_image_urls` internally,
+while first/last-frame mode uses separate first and last frame fields.
+
+MiniMax H3 pricing is `18 credits/s` at `768P` and `29 credits/s` at `2K`,
+including generated video duration and input video duration. The first five
+input images are free; each additional image costs `9 credits`. Audio input is
+free.
 
 ```bash
 curl -X POST 'https://cyberbara.com/api/v1/videos/generations' \

@@ -192,6 +192,7 @@ CyberBara supported image, video, audio, and music models:
 | Video | `happyhorse-1.0-video-edit` | `video-to-video` |
 | Video | `sora-2` | `text-to-video`, `image-to-video` |
 | Video | `sora-2-pro` | `text-to-video`, `image-to-video` |
+| Video | `seedance-2.5` | `text-to-video`, `image-to-video`, `video-to-video` |
 | Video | `seedance-1-pro` | `text-to-video`, `image-to-video` |
 | Video | `seedance-1-lite` | `text-to-video`, `image-to-video` |
 | Video | `seedance-1-pro-fast` | `image-to-video` |
@@ -201,6 +202,7 @@ CyberBara supported image, video, audio, and music models:
 | Video | `veo-3.1-fast` | `text-to-video`, `image-to-video` |
 | Video | `veo-3.1-quality` | `text-to-video`, `image-to-video` |
 | Video | `gemini-omni-video` | `text-to-video`, `image-to-video`, `video-to-video` |
+| Video | `minimax-h3` | `text-to-video`, `image-to-video` |
 | Video | `kling-video-o1` | `video-to-video` |
 
 For detailed and latest credit pricing by model, visit https://cyberbara.com/credit-costs.
