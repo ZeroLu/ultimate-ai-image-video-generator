@@ -107,6 +107,11 @@ Response example:
         "supported_scenes": ["text-to-video", "image-to-video"]
       },
       {
+        "model": "kling-o3",
+        "media_type": "video",
+        "supported_scenes": ["text-to-video", "image-to-video", "video-to-video"]
+      },
+      {
         "model": "kling-3.0-motion-control",
         "media_type": "video",
         "supported_scenes": ["video-to-video"]
@@ -925,7 +930,7 @@ Validation level: strict.
 | `options.mode`         | `string`             | No       | `std` / `pro` (default `std`)            | `std` follows Standard pricing; `pro` follows Pro pricing         |
 | `options.aspect_ratio` | `string`             | No       | `1:1` / `16:9` / `9:16` (default `16:9`) | Used for text-to-video; provider may ignore it for image-to-video |
 
-#### `kling-3.0-omni`
+#### `kling-o3`
 
 Supported scenes: `text-to-video`, `image-to-video`, `video-to-video`.
 Validation level: strict.
@@ -935,13 +940,17 @@ Validation level: strict.
 | `prompt`               | `string`             | Yes      | non-empty                                  | Prompt for the generated video |
 | `options.image_input`  | `string[]`           | No       | URL array                                  | Image references sent to KIE as `image_urls` |
 | `options.video_input`  | `string[]`           | No       | URL array                                  | Source video sent to KIE as `video_urls` |
-| `options.audio_input`  | `string[]`           | No       | URL array                                  | Audio references sent to KIE as `audio_urls` |
+| `options.sound`        | `boolean`            | No       | default `false`                            | Enables KIE native audio through `audio` |
 | `options.duration`     | `string` or `number` | No       | integer `3`-`15` (default `5`)             | Output duration in seconds |
 | `options.resolution`   | `string`             | No       | `720p` / `1080p` / `4K` (default `720p`)   | Resolution-based pricing |
 | `options.aspect_ratio` | `string`             | No       | `1:1` / `16:9` / `9:16` (default `16:9`)   | Used when no source video is provided |
 
-Kling 3.0 Omni pricing is calculated per output second: 720p is 14 credits without
-audio or video input, 18 with audio input, and 20 with video input; 1080p is
+Kling O3 uses KIE `kling-3.0-omni/*` routes internally:
+`text-to-video`, `image-to-video`, and `transformation` for `video-to-video`.
+When a source video is sent, Cyberbara uses `aspect_ratio: "auto"` upstream.
+
+Kling O3 pricing is calculated per output second: 720p is 14 credits without
+native audio or video input, 18 with native audio, and 20 with video input; 1080p is
 18, 23, and 27 credits respectively; 4K is 67 credits for every input combination.
 
 #### `kling-3.0-motion-control`
