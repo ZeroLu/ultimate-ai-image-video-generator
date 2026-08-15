@@ -198,6 +198,7 @@ CyberBara 当前支持的图像、视频、音频与音乐模型：
 | Video | `seedance-1-pro-fast` | `image-to-video` |
 | Video | `kling-2.6` | `text-to-video`, `image-to-video` |
 | Video | `kling-3.0` | `text-to-video`, `image-to-video` |
+| Video | `kling-3.0-omni` | `text-to-video`, `image-to-video`, `video-to-video` |
 | Video | `kling-3.0-motion-control` | `video-to-video` |
 | Video | `veo-3.1-fast` | `text-to-video`, `image-to-video` |
 | Video | `veo-3.1-quality` | `text-to-video`, `image-to-video` |
