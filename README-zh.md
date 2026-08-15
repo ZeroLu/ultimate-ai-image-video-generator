@@ -180,6 +180,7 @@ CyberBara 当前支持的图像、视频、音频与音乐模型：
 | Image | `nano-banana-pro` | `text-to-image`, `image-to-image` |
 | Image | `gpt-image-2` | `text-to-image`, `image-to-image` |
 | Image | `midjourney-v7` | `text-to-image`, `image-to-image` |
+| Image | `seedream-5-pro-layer-decomposition` | `image-to-image` |
 | Music | `suno-music-v3-5` | `text-to-music` |
 | Music | `suno-music-v4` | `text-to-music` |
 | Music | `suno-music-v4-5` | `text-to-music` |

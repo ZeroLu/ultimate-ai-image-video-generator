@@ -916,6 +916,24 @@ Validation level: strict.
 | `options.sound`        | `boolean`            | No                            | default `false`                          | Strictly validated                                            |
 | `options.aspect_ratio` | `string`             | No                            | `1:1` / `16:9` / `9:16` (default `16:9`) | Used for `text-to-video`; `image-to-video` ignores this field |
 
+#### `seedream-5-pro-layer-decomposition`
+
+Supported scenes: `image-to-image`.
+Validation level: strict.
+
+| Field                    | Type                 | Required | Allowed / Default                         | Notes |
+| ------------------------ | -------------------- | -------- | ----------------------------------------- | ----- |
+| `prompt`                 | `string`             | No       | layer instructions                         | Optional KIE layer description, including bounding boxes |
+| `options.image_input`    | `string[]`           | Yes      | first image URL is used                    | Cyberbara sends the first source image as KIE `image_url` |
+| `options.size`           | `string`             | No       | `1K` / `1.5K` / `2K` / `auto` (default `auto`) | Output layer resolution |
+| `options.output_format`  | `string`             | No       | `png` / `jpeg` (default `png`)             | Output layer format |
+| `options.layer_count`    | `integer`            | No       | `1`-`10` (default `4`)                     | Cyberbara-only expected layer count used for the upfront credit estimate |
+
+The provider route is `seedream/5-pro-layer-decomposition`. KIE returns one
+image per layer plus the base image, and Cyberbara keeps all returned image
+URLs in the task result. KIE pricing is 7 credits per output image at 1K/1.5K
+and 14 credits per output image at 2K; `auto` is quoted at the 2K rate.
+
 #### `kling-3.0`
 
 Supported scenes: `text-to-video`, `image-to-video`.
