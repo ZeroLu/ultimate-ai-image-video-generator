@@ -916,23 +916,36 @@ Validation level: strict.
 | `options.sound`        | `boolean`            | No                            | default `false`                          | Strictly validated                                            |
 | `options.aspect_ratio` | `string`             | No                            | `1:1` / `16:9` / `9:16` (default `16:9`) | Used for `text-to-video`; `image-to-video` ignores this field |
 
-#### `seedream-5-pro-layer-decomposition`
+#### `seedream-5-pro`
 
-Supported scenes: `image-to-image`.
-Validation level: strict.
+Supported scenes: `text-to-image`, `image-to-image`.
+Validation level: strict + mode routing.
+
+CyberBara exposes one public model ID, `seedream-5-pro`. Do not create a
+separate public model ID for layer decomposition. Use
+`options.mode: "layer-decomposition"` on `image-to-image` when you want KIE
+layer decomposition.
 
 | Field                    | Type                 | Required | Allowed / Default                         | Notes |
 | ------------------------ | -------------------- | -------- | ----------------------------------------- | ----- |
-| `prompt`                 | `string`             | No       | layer instructions                         | Optional KIE layer description, including bounding boxes |
-| `options.image_input`    | `string[]`           | Yes      | first image URL is used                    | Cyberbara sends the first source image as KIE `image_url` |
-| `options.size`           | `string`             | No       | `1K` / `1.5K` / `2K` / `auto` (default `auto`) | Output layer resolution |
-| `options.output_format`  | `string`             | No       | `png` / `jpeg` (default `png`)             | Output layer format |
-| `options.layer_count`    | `integer`            | No       | `1`-`10` (default `4`)                     | Cyberbara-only expected layer count used for the upfront credit estimate |
+| `prompt`                 | `string`             | Yes except layer decomposition | non-empty / layer instructions | Required for normal text/image generation; optional layer description for layer decomposition |
+| `options.image_input`    | `string[]`           | Required for `image-to-image` | URL array / first image for layer decomposition | Normal image-to-image sends image URLs; layer decomposition sends the first source image as KIE `image_url` |
+| `options.mode`           | `string`             | No       | `image-to-image` / `layer-decomposition` | Only `layer-decomposition` changes the internal route |
+| `options.aspect_ratio`   | `string`             | No       | model defaults | Used by normal text/image generation |
+| `options.resolution` / `options.quality` / `options.size` | `string` | No | `basic` / `high` / `1K` / `1.5K` / `2K` / `auto` | Normal generation uses quality/resolution; layer decomposition uses `size` |
+| `options.output_format`  | `string`             | No       | `png` / `jpeg` (default `png`) | Used only for layer decomposition |
+| `options.layer_count`    | `integer`            | No       | `1`-`10` (default `4`) | CyberBara-only expected layer count used for the upfront layer decomposition credit estimate |
 
-The provider route is `seedream/5-pro-layer-decomposition`. KIE returns one
-image per layer plus the base image, and Cyberbara keeps all returned image
-URLs in the task result. KIE pricing is 7 credits per output image at 1K/1.5K
-and 14 credits per output image at 2K; `auto` is quoted at the 2K rate.
+Internal KIE route mapping:
+
+- `text-to-image` -> `seedream/5-pro-text-to-image`
+- `image-to-image` without `options.mode: "layer-decomposition"` -> `seedream/5-pro-image-to-image`
+- `image-to-image` with `options.mode: "layer-decomposition"` -> `seedream/5-pro-layer-decomposition`
+
+For layer decomposition, KIE returns one image per layer plus the base image,
+and CyberBara keeps all returned image URLs in the task result. Layer
+decomposition pricing is 7 credits per output image at 1K/1.5K and 14 credits
+per output image at 2K; `auto` is quoted at the 2K rate.
 
 #### `grok-imagine-image-2`
 
