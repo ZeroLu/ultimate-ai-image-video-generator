@@ -934,6 +934,32 @@ image per layer plus the base image, and Cyberbara keeps all returned image
 URLs in the task result. KIE pricing is 7 credits per output image at 1K/1.5K
 and 14 credits per output image at 2K; `auto` is quoted at the 2K rate.
 
+#### `grok-imagine-image-2`
+
+Supported scenes: `text-to-image`, `image-to-image`.
+Validation level: strict mode routing.
+
+CyberBara exposes one public model ID, `grok-imagine-image-2`. Do not create
+separate public model IDs for layer separation or layer editing. Use
+`options.mode` to select the workflow.
+
+| Field                    | Type                 | Required | Allowed / Default                                  | Notes |
+| ------------------------ | -------------------- | -------- | -------------------------------------------------- | ----- |
+| `prompt`                 | `string`             | Yes except layer separation | non-empty | Required for `text-to-image` and `image-edit`; omitted for `layer-separation` |
+| `options.mode`           | `string`             | No       | `text-to-image` / `layer-separation` / `image-edit` (default `text-to-image`) | Selects the internal KIE route |
+| `options.aspect_ratio`   | `string`             | No       | `1:1` / `2:3` / `3:2` / `16:9` / `9:16` (default `1:1`) | Used only for `text-to-image` |
+| `options.source_task_id` | `string`             | Required for `image-to-image` | completed Grok task id | Sent upstream as KIE `task_id`; `options.task_id` is also accepted internally |
+| `options.mask_indexs`    | `integer[]` or comma string | Required for `image-edit` | layer indexes | KIE spelling is `mask_indexs`; `mask_indexes` is accepted as an alias internally |
+
+Internal KIE route mapping:
+
+- `options.mode: "text-to-image"` -> `grok-imagine-image-2-0/text-to-image`
+- `options.mode: "layer-separation"` -> `grok-imagine-image-2-0/segment-map`
+- `options.mode: "image-edit"` -> `grok-imagine-image-2-0/image-edit`
+
+Pricing: text-to-image costs 4 credits per image, image edit costs 4 credits
+per image, and layer separation costs 0 credits.
+
 #### `kling-3.0`
 
 Supported scenes: `text-to-video`, `image-to-video`.
