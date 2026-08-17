@@ -949,28 +949,22 @@ per output image at 2K; `auto` is quoted at the 2K rate.
 
 #### `grok-imagine-image-2`
 
-Supported scenes: `text-to-image`, `image-to-image`.
-Validation level: strict mode routing.
+Supported scenes: `text-to-image`.
+Validation level: strict prompt routing.
 
-CyberBara exposes one public model ID, `grok-imagine-image-2`. Use
-`options.mode: "image-edit"` for image editing. Layer separation is not exposed
-as a CyberBara workflow for this model.
+CyberBara exposes one public model ID, `grok-imagine-image-2`. It maps to the
+KIE text-to-image route only.
 
-| Field                    | Type                 | Required | Allowed / Default                                  | Notes |
-| ------------------------ | -------------------- | -------- | -------------------------------------------------- | ----- |
-| `prompt`                 | `string`             | Yes      | non-empty | Required for `text-to-image` and `image-edit` |
-| `options.mode`           | `string`             | No       | `text-to-image` / `image-edit` (default `text-to-image`) | Selects the internal KIE route |
-| `options.aspect_ratio`   | `string`             | No       | `1:1` / `2:3` / `3:2` / `16:9` / `9:16` (default `1:1`) | Used only for `text-to-image` |
-| `options.source_task_id` | `string`             | Required for `image-to-image` | completed Grok task id | Sent upstream as KIE `task_id`; `options.task_id` is also accepted internally |
-| `options.mask_indexs`    | `integer[]` or comma string | Required for `image-edit` | layer indexes | KIE spelling is `mask_indexs`; `mask_indexes` is accepted as an alias internally |
+| Field                  | Type     | Required | Allowed / Default                                  | Notes |
+| ---------------------- | -------- | -------- | -------------------------------------------------- | ----- |
+| `prompt`               | `string` | Yes      | non-empty | Required for text generation |
+| `options.aspect_ratio` | `string` | No       | `1:1` / `2:3` / `3:2` / `16:9` / `9:16` (default `1:1`) | Used for text-to-image |
 
 Internal KIE route mapping:
 
-- `options.mode: "text-to-image"` -> `grok-imagine-image-2-0/text-to-image`
-- `options.mode: "image-edit"` -> `grok-imagine-image-2-0/image-edit`
+- `text-to-image` -> `grok-imagine-image-2-0/text-to-image`
 
-Pricing: text-to-image costs 4 credits per image, and image edit costs 4
-credits per image.
+Pricing: text-to-image costs 4 credits per image.
 
 #### `kling-3.0`
 
