@@ -109,7 +109,11 @@ Response example:
       {
         "model": "kling-o3",
         "media_type": "video",
-        "supported_scenes": ["text-to-video", "image-to-video", "video-to-video"]
+        "supported_scenes": [
+          "text-to-video",
+          "image-to-video",
+          "video-to-video"
+        ]
       },
       {
         "model": "kling-3.0-motion-control",
@@ -119,10 +123,23 @@ Response example:
       {
         "model": "seedance-2.5",
         "media_type": "video",
-        "supported_scenes": ["text-to-video", "image-to-video", "video-to-video"]
+        "supported_scenes": [
+          "text-to-video",
+          "image-to-video",
+          "video-to-video"
+        ]
+      },
+      {
+        "model": "seedance-2.5-stable",
+        "media_type": "video",
+        "supported_scenes": [
+          "text-to-video",
+          "image-to-video",
+          "video-to-video"
+        ]
       }
     ],
-    "total": 5
+    "total": 7
   }
 }
 ```
@@ -661,14 +678,14 @@ Validation level: strict keys + light normalization.
 
 Credits: `3` credits per image.
 
-| Field                  | Type       | Required                      | Allowed / Default    | Notes                                                                |
-| ---------------------- | ---------- | ----------------------------- | -------------------- | -------------------------------------------------------------------- |
-| `prompt`               | `string`   | Yes                           | non-empty            | Required for both scenes                                             |
-| `options.image_input`  | `string[]` | Required for `image-to-image` | URL array            | Sent upstream as `image_urls`                                        |
-| `options.aspect_ratio` | `string`   | No                            | any non-empty string | Passed through as-is                                                 |
-| `options.resolution`   | `string`   | No                            | ignored              | CyberBara does not send `resolution` for `nano-banana-2-lite`        |
-| `options.output_format`| `string`   | No                            | ignored              | CyberBara does not send `output_format` for `nano-banana-2-lite`     |
-| `options.google_search`| `boolean`  | No                            | ignored              | `google_search` is not supported by `nano-banana-2-lite`             |
+| Field                   | Type       | Required                      | Allowed / Default    | Notes                                                            |
+| ----------------------- | ---------- | ----------------------------- | -------------------- | ---------------------------------------------------------------- |
+| `prompt`                | `string`   | Yes                           | non-empty            | Required for both scenes                                         |
+| `options.image_input`   | `string[]` | Required for `image-to-image` | URL array            | Sent upstream as `image_urls`                                    |
+| `options.aspect_ratio`  | `string`   | No                            | any non-empty string | Passed through as-is                                             |
+| `options.resolution`    | `string`   | No                            | ignored              | CyberBara does not send `resolution` for `nano-banana-2-lite`    |
+| `options.output_format` | `string`   | No                            | ignored              | CyberBara does not send `output_format` for `nano-banana-2-lite` |
+| `options.google_search` | `boolean`  | No                            | ignored              | `google_search` is not supported by `nano-banana-2-lite`         |
 
 #### `nano-banana-pro`
 
@@ -763,7 +780,7 @@ Example: image-to-image with prompt images only
 
 ### Video Models
 
-Except `kling-video-o1`, `kling-3.0-motion-control`, `seedance-2`, `seedance-2-fast`, `seedance-2-preview`, `seedance-2-fast-preview`, and `seedance-2-watermark-remover`, models below do not support `video-to-video`, so `options.video_input` should not be sent.
+Except `kling-video-o1`, `kling-3.0-motion-control`, `seedance-2.5`, `seedance-2.5-stable`, `seedance-2`, `seedance-2-fast`, `seedance-2-preview`, `seedance-2-fast-preview`, and `seedance-2-watermark-remover`, models below do not support `video-to-video`, so `options.video_input` should not be sent.
 
 #### `sora-2`
 
@@ -819,6 +836,37 @@ Supported scenes: `text-to-video`, `image-to-video`, `video-to-video`.
 Validation level: strict.
 
 Fields are the same as `seedance-2`.
+
+#### `seedance-2.5`
+
+Supported scenes: `text-to-video`, `image-to-video`, `video-to-video`.
+Validation level: strict.
+
+Notes:
+
+- This is the regular Seedance 2.5 public route.
+- Billing uses 480p / 720p per-second rates and supports up to 30 seconds.
+- For `video-to-video`, billing uses `input video duration + output duration` unless edit mode follows the input video duration.
+
+| Field                          | Type                 | Required                      | Allowed / Default                                                 | Notes                                                  |
+| ------------------------------ | -------------------- | ----------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
+| `prompt`                       | `string`             | Yes                           | non-empty                                                         | Required for all scenes                                |
+| `options.image_input`          | `string[]`           | Required for `image-to-video` | URL array, max `30`                                               | Used as first/last frames or omni references           |
+| `options.video_input`          | `string[]`           | Required for `video-to-video` | URL array, max `10`                                               | Used for video reference, edit, or extend flows        |
+| `options.audio_input`          | `string[]`           | No                            | URL array, max `10`                                               | Supported for omni-reference flows                     |
+| `options.duration`             | `string` or `number` | No                            | integer `4`-`30` (default `5`)                                    | Output duration                                        |
+| `options.input_video_duration` | `string` or `number` | Recommended for video input   | seconds, max `30`                                                 | Used for credit quote accuracy                         |
+| `options.resolution`           | `string`             | No                            | `480p` / `720p` (default `720p`)                                  | Higher values are normalized to `720p`                 |
+| `options.aspect_ratio`         | `string`             | No                            | `21:9` / `16:9` / `4:3` / `1:1` / `3:4` / `9:16` (default `16:9`) | May be ignored when reference media determines framing |
+| `options.seedance_video_mode`  | `string`             | No                            | `auto` / `reference` / `edit` / `extend`                          | Optional mode hint for omni-reference workflows        |
+| `options.seedance_mode`        | `string`             | No                            | `first_frame` / `first_last_frames` / `omni_reference`            | Optional explicit mode hint                            |
+
+#### `seedance-2.5-stable`
+
+Supported scenes: `text-to-video`, `image-to-video`, `video-to-video`.
+Validation level: strict.
+
+Fields are the same as `seedance-2.5`. The stable route uses enterprise-grade routing and different credit rates.
 
 #### `seedance-2-preview`
 
@@ -926,15 +974,15 @@ separate public model ID for layer decomposition. Use
 `options.mode: "layer-decomposition"` on `image-to-image` when you want KIE
 layer decomposition.
 
-| Field                    | Type                 | Required | Allowed / Default                         | Notes |
-| ------------------------ | -------------------- | -------- | ----------------------------------------- | ----- |
-| `prompt`                 | `string`             | Yes except layer decomposition | non-empty / layer instructions | Required for normal text/image generation; optional layer description for layer decomposition |
-| `options.image_input`    | `string[]`           | Required for `image-to-image` | URL array / first image for layer decomposition | Normal image-to-image sends image URLs; layer decomposition sends the first source image as KIE `image_url` |
-| `options.mode`           | `string`             | No       | `image-to-image` / `layer-decomposition` | Only `layer-decomposition` changes the internal route |
-| `options.aspect_ratio`   | `string`             | No       | model defaults | Used by normal text/image generation |
-| `options.resolution` / `options.quality` / `options.size` | `string` | No | `basic` / `high` / `1K` / `1.5K` / `2K` / `auto` | Normal generation uses quality/resolution; layer decomposition uses `size` |
-| `options.output_format`  | `string`             | No       | `png` / `jpeg` (default `png`) | Used only for layer decomposition |
-| `options.layer_count`    | `integer`            | No       | `1`-`10` (default `4`) | CyberBara-only expected layer count used for the upfront layer decomposition credit estimate |
+| Field                                                     | Type       | Required                       | Allowed / Default                                | Notes                                                                                                       |
+| --------------------------------------------------------- | ---------- | ------------------------------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `prompt`                                                  | `string`   | Yes except layer decomposition | non-empty / layer instructions                   | Required for normal text/image generation; optional layer description for layer decomposition               |
+| `options.image_input`                                     | `string[]` | Required for `image-to-image`  | URL array / first image for layer decomposition  | Normal image-to-image sends image URLs; layer decomposition sends the first source image as KIE `image_url` |
+| `options.mode`                                            | `string`   | No                             | `image-to-image` / `layer-decomposition`         | Only `layer-decomposition` changes the internal route                                                       |
+| `options.aspect_ratio`                                    | `string`   | No                             | model defaults                                   | Used by normal text/image generation                                                                        |
+| `options.resolution` / `options.quality` / `options.size` | `string`   | No                             | `basic` / `high` / `1K` / `1.5K` / `2K` / `auto` | Normal generation uses quality/resolution; layer decomposition uses `size`                                  |
+| `options.output_format`                                   | `string`   | No                             | `png` / `jpeg` (default `png`)                   | Used only for layer decomposition                                                                           |
+| `options.layer_count`                                     | `integer`  | No                             | `1`-`10` (default `4`)                           | CyberBara-only expected layer count used for the upfront layer decomposition credit estimate                |
 
 Internal KIE route mapping:
 
@@ -955,10 +1003,10 @@ Validation level: strict prompt routing.
 CyberBara exposes one public model ID, `grok-imagine-image-2`. It maps to the
 KIE text-to-image route only.
 
-| Field                  | Type     | Required | Allowed / Default                                  | Notes |
-| ---------------------- | -------- | -------- | -------------------------------------------------- | ----- |
-| `prompt`               | `string` | Yes      | non-empty | Required for text generation |
-| `options.aspect_ratio` | `string` | No       | `1:1` / `2:3` / `3:2` / `16:9` / `9:16` (default `1:1`) | Used for text-to-image |
+| Field                  | Type     | Required | Allowed / Default                                       | Notes                        |
+| ---------------------- | -------- | -------- | ------------------------------------------------------- | ---------------------------- |
+| `prompt`               | `string` | Yes      | non-empty                                               | Required for text generation |
+| `options.aspect_ratio` | `string` | No       | `1:1` / `2:3` / `3:2` / `16:9` / `9:16` (default `1:1`) | Used for text-to-image       |
 
 Internal KIE route mapping:
 
@@ -985,15 +1033,15 @@ Validation level: strict.
 Supported scenes: `text-to-video`, `image-to-video`, `video-to-video`.
 Validation level: strict.
 
-| Field                  | Type                 | Required | Allowed / Default                          | Notes |
-| ---------------------- | -------------------- | -------- | ------------------------------------------ | ----- |
-| `prompt`               | `string`             | Yes      | non-empty                                  | Prompt for the generated video |
-| `options.image_input`  | `string[]`           | No       | URL array                                  | Image references sent to KIE as `image_urls` |
-| `options.video_input`  | `string[]`           | No       | URL array                                  | Source video sent to KIE as `video_urls` |
-| `options.sound`        | `boolean`            | No       | default `false`                            | Enables KIE native audio through `audio` |
-| `options.duration`     | `string` or `number` | No       | integer `3`-`15` (default `5`)             | Output duration in seconds |
-| `options.resolution`   | `string`             | No       | `720p` / `1080p` / `4K` (default `720p`)   | Resolution-based pricing |
-| `options.aspect_ratio` | `string`             | No       | `1:1` / `16:9` / `9:16` (default `16:9`)   | Used when no source video is provided |
+| Field                  | Type                 | Required | Allowed / Default                        | Notes                                        |
+| ---------------------- | -------------------- | -------- | ---------------------------------------- | -------------------------------------------- |
+| `prompt`               | `string`             | Yes      | non-empty                                | Prompt for the generated video               |
+| `options.image_input`  | `string[]`           | No       | URL array                                | Image references sent to KIE as `image_urls` |
+| `options.video_input`  | `string[]`           | No       | URL array                                | Source video sent to KIE as `video_urls`     |
+| `options.sound`        | `boolean`            | No       | default `false`                          | Enables KIE native audio through `audio`     |
+| `options.duration`     | `string` or `number` | No       | integer `3`-`15` (default `5`)           | Output duration in seconds                   |
+| `options.resolution`   | `string`             | No       | `720p` / `1080p` / `4K` (default `720p`) | Resolution-based pricing                     |
+| `options.aspect_ratio` | `string`             | No       | `1:1` / `16:9` / `9:16` (default `16:9`) | Used when no source video is provided        |
 
 Kling O3 uses KIE `kling-3.0-omni/*` routes internally:
 `text-to-video`, `image-to-video`, and `transformation` for `video-to-video`.

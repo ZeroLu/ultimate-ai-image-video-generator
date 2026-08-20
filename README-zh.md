@@ -171,41 +171,42 @@ Use $ultimate-ai-media-generator-skill to check current credit balance and the l
 
 CyberBara 当前支持的图像、视频、音频与音乐模型：
 
-| 媒体类型 | 模型 | 支持场景 |
-| -------- | ---- | -------- |
-| Audio | `suno-sound-v5` | `text-to-audio` |
-| Audio | `suno-sound-v5-5` | `text-to-audio` |
-| Image | `nano-banana-2` | `text-to-image`, `image-to-image` |
-| Image | `nano-banana-2-lite` | `text-to-image`, `image-to-image` |
-| Image | `nano-banana-pro` | `text-to-image`, `image-to-image` |
-| Image | `gpt-image-2` | `text-to-image`, `image-to-image` |
-| Image | `midjourney-v7` | `text-to-image`, `image-to-image` |
-| Image | `seedream-5-pro-layer-decomposition` | `image-to-image` |
-| Music | `suno-music-v3-5` | `text-to-music` |
-| Music | `suno-music-v4` | `text-to-music` |
-| Music | `suno-music-v4-5` | `text-to-music` |
-| Music | `suno-music-v4-5-plus` | `text-to-music` |
-| Music | `suno-music-v5` | `text-to-music` |
-| Music | `suno-music-v5-5` | `text-to-music` |
-| Video | `happyhorse-1.0` | `text-to-video` |
-| Video | `happyhorse-1.0-first-frame` | `image-to-video` |
-| Video | `happyhorse-1.0-reference` | `image-to-video` |
-| Video | `happyhorse-1.0-video-edit` | `video-to-video` |
-| Video | `sora-2` | `text-to-video`, `image-to-video` |
-| Video | `sora-2-pro` | `text-to-video`, `image-to-video` |
-| Video | `seedance-2.5` | `text-to-video`, `image-to-video`, `video-to-video` |
-| Video | `seedance-1-pro` | `text-to-video`, `image-to-video` |
-| Video | `seedance-1-lite` | `text-to-video`, `image-to-video` |
-| Video | `seedance-1-pro-fast` | `image-to-video` |
-| Video | `kling-2.6` | `text-to-video`, `image-to-video` |
-| Video | `kling-3.0` | `text-to-video`, `image-to-video` |
-| Video | `kling-o3` | `text-to-video`, `image-to-video`, `video-to-video` |
-| Video | `kling-3.0-motion-control` | `video-to-video` |
-| Video | `veo-3.1-fast` | `text-to-video`, `image-to-video` |
-| Video | `veo-3.1-quality` | `text-to-video`, `image-to-video` |
-| Video | `gemini-omni-video` | `text-to-video`, `image-to-video`, `video-to-video` |
-| Video | `minimax-h3` | `text-to-video`, `image-to-video` |
-| Video | `kling-video-o1` | `video-to-video` |
+| 媒体类型 | 模型                                 | 支持场景                                            |
+| -------- | ------------------------------------ | --------------------------------------------------- |
+| Audio    | `suno-sound-v5`                      | `text-to-audio`                                     |
+| Audio    | `suno-sound-v5-5`                    | `text-to-audio`                                     |
+| Image    | `nano-banana-2`                      | `text-to-image`, `image-to-image`                   |
+| Image    | `nano-banana-2-lite`                 | `text-to-image`, `image-to-image`                   |
+| Image    | `nano-banana-pro`                    | `text-to-image`, `image-to-image`                   |
+| Image    | `gpt-image-2`                        | `text-to-image`, `image-to-image`                   |
+| Image    | `midjourney-v7`                      | `text-to-image`, `image-to-image`                   |
+| Image    | `seedream-5-pro-layer-decomposition` | `image-to-image`                                    |
+| Music    | `suno-music-v3-5`                    | `text-to-music`                                     |
+| Music    | `suno-music-v4`                      | `text-to-music`                                     |
+| Music    | `suno-music-v4-5`                    | `text-to-music`                                     |
+| Music    | `suno-music-v4-5-plus`               | `text-to-music`                                     |
+| Music    | `suno-music-v5`                      | `text-to-music`                                     |
+| Music    | `suno-music-v5-5`                    | `text-to-music`                                     |
+| Video    | `happyhorse-1.0`                     | `text-to-video`                                     |
+| Video    | `happyhorse-1.0-first-frame`         | `image-to-video`                                    |
+| Video    | `happyhorse-1.0-reference`           | `image-to-video`                                    |
+| Video    | `happyhorse-1.0-video-edit`          | `video-to-video`                                    |
+| Video    | `sora-2`                             | `text-to-video`, `image-to-video`                   |
+| Video    | `sora-2-pro`                         | `text-to-video`, `image-to-video`                   |
+| Video    | `seedance-2.5`                       | `text-to-video`, `image-to-video`, `video-to-video` |
+| Video    | `seedance-2.5-stable`                | `text-to-video`, `image-to-video`, `video-to-video` |
+| Video    | `seedance-1-pro`                     | `text-to-video`, `image-to-video`                   |
+| Video    | `seedance-1-lite`                    | `text-to-video`, `image-to-video`                   |
+| Video    | `seedance-1-pro-fast`                | `image-to-video`                                    |
+| Video    | `kling-2.6`                          | `text-to-video`, `image-to-video`                   |
+| Video    | `kling-3.0`                          | `text-to-video`, `image-to-video`                   |
+| Video    | `kling-o3`                           | `text-to-video`, `image-to-video`, `video-to-video` |
+| Video    | `kling-3.0-motion-control`           | `video-to-video`                                    |
+| Video    | `veo-3.1-fast`                       | `text-to-video`, `image-to-video`                   |
+| Video    | `veo-3.1-quality`                    | `text-to-video`, `image-to-video`                   |
+| Video    | `gemini-omni-video`                  | `text-to-video`, `image-to-video`, `video-to-video` |
+| Video    | `minimax-h3`                         | `text-to-video`, `image-to-video`                   |
+| Video    | `kling-video-o1`                     | `video-to-video`                                    |
 
 具体和最新积分费用请访问：https://cyberbara.com/credit-costs
 
