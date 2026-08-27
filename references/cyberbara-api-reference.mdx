@@ -16,7 +16,7 @@ CyberBara public API is exposed under `/api/v1` and supports:
 - Quote credits before creating a task
 - List public models
 
-Provider details are intentionally hidden from clients.
+Provider error details are preserved when a provider rejects an input before task creation. The API returns the provider error code, complete message, and structured details.
 
 ## Base URL
 
@@ -1166,6 +1166,29 @@ Error example (`task_not_found`):
   }
 }
 ```
+
+Provider upload validation error (HTTP 400):
+
+```json
+{
+  "error": {
+    "code": "UPLOAD_INVALID",
+    "message": "Invalid input 'file': Video frame rate must be between 24 and 60 FPS.",
+    "details": [
+      {
+        "field": "file",
+        "reason": "fps_out_of_range",
+        "message": "Video frame rate must be between 24 and 60 FPS.",
+        "minimum": 24,
+        "maximum": 60,
+        "unit": "fps"
+      }
+    ]
+  }
+}
+```
+
+The same response shape is used for other provider-side upload checks, including unsupported audio codecs, image aspect-ratio violations, and video pixel-count limits. These errors happen before provider task submission, so no `task_id` is returned. Preserve `error.code`, `error.message`, and `error.details` when reporting the failure.
 
 Status values:
 

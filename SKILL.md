@@ -9,6 +9,8 @@ description: Generate and monitor CyberBara Public API v1 image, video, audio, a
 
 Use this skill to call CyberBara APIs reliably, create image, video, audio, and music generation tasks, and return final media URLs with credit-aware flow.
 
+For Chinese article or repo-promo title images, default to model `nano-banana-2-lite` unless the user requests a different image model. Prefer generating a text-free cover background first, then add the final Chinese headline locally so the published title is exact and readable.
+
 ## Implementation Architecture
 
 The runtime uses a layered Python architecture:
@@ -234,4 +236,5 @@ rg 'kling-2.6|sora-2|veo-3.1|seedance' references/cyberbara-api-reference.mdx
 - `insufficient_credits`: quote first or recharge credits.
 - `invalid_scene` or `scene_not_supported`: choose scene supported by model.
 - `invalid_request`: verify `prompt` and `options` requirements by model.
+- `UPLOAD_INVALID`: inspect and report the complete `error.message` and `error.details`; these provider upload-validation errors occur before a task ID is created.
 - `task_not_found`: verify task ID and environment domain.
